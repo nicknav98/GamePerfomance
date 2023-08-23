@@ -1,0 +1,8 @@
+#Ignore VirtualEnv Enviroment
+./VirtualEnv/
+#ignore environment variables
+./app/env.py
+#ignore password py 
+./app/password.py
+
+
