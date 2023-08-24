@@ -29,9 +29,14 @@ class GPUBase(BaseModel):
     id : int
     vendor : str
     model : str
+    modelFamily : str
     vram : str 
     baseClockSpeed : int
     boostedClockSpeed : int
+    memoryClock : int
+    RTCores: int
+    tdp: int
+    suggestedPSU: int
     cudaCores : int 
     tensorCores : int
     currentPriceAvg : int
@@ -108,6 +113,7 @@ class UserCreate(UserBase):
 class User(UserBase):
     id: int
     is_active: bool 
+    is_admin: bool
     FavGames = list[GameBase] = []
 
 

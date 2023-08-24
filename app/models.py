@@ -11,6 +11,7 @@ class User(Base):
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
     is_active = Column(Boolean, default=True)
+    is_admin = Column(Boolean, default=False)
     
     #Relationships
     FavGames = relationship("Game", back_populates="FavouritedBy")
@@ -48,11 +49,16 @@ class GPU(Base):
     id = Column(Integer, primary_key=True, index=True)
     vendor = Column(String)
     model = Column(String)
+    modelFamily = Column(String)
     vram = Column(Integer)
     baseClockSpeed = Column(Integer)
     boostedClockSpeed = Column(Integer)
+    memoryClock = Column(Integer)
+    RTCores = Column(Integer)
+    tdp = Column(Integer)
+    suggestedPSU = Column(Integer)
     cudaCores = Column(Integer)
-    rayTracingCores = Column(Integer)
+    tensorCores = Column(Integer)
     currentPriceAvg = Column(Integer)
     
     #relationships
@@ -70,6 +76,7 @@ class CPU(Base):
     d3Cache = Column(Integer)
     baseClock = Column(String)
     boostClock = Column(String)
+    currentPriceAvg = Column(Integer)
 
     #relationships
     listOfMinSpec = relationship("Game", back_populates='MinSpecCPU')
