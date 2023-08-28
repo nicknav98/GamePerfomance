@@ -10,3 +10,5 @@
 ./venv/
 .DS_Store
 
+app/__pycache__/
+app/venv/

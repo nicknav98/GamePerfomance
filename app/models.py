@@ -2,7 +2,7 @@ from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
 
-from app.database import Base
+from database import Base
 
 class User(Base):
     __tablename__ = 'users' #table name on PostgreSQL 
@@ -14,7 +14,8 @@ class User(Base):
     is_admin = Column(Boolean, default=False)
     
     #Relationships
-    FavGames = relationship("Game", back_populates="FavouritedBy")
+    #Games_title = Column(String, ForeignKey('games.title'), nullable=False)
+    FavGames = relationship("Game", backref='FavouritedBy', uselist=True, foreign_keys=[id])
 
 class Game(Base):
     __tablename__ = 'games' #table name on PostgreSQL 
@@ -26,19 +27,19 @@ class Game(Base):
     releaseDate = Column(String)
 
     #Relationships
-    FavouritedBy = Column(String, ForeignKey='users.FavGames')
+    FavouritedBy = relationship('User', back_populates='user_FavGames')
     
-    MinSpecGPU = Column(String, ForeignKey='GPUs.model')
-    MaxSpecGPU = Column(String, ForeignKey='GPUs.model')
+    MinSpecGPU = Column(Integer, ForeignKey('GPUs.id'), nullable = True)
+    MaxSpecGPU = Column(Integer, ForeignKey('GPUs.id'), nullable = True)
     
-    MinSpecCPU = Column(String, ForeignKey='CPUs.model')
-    MaxSpecCPU = Column(String, ForeignKey='CPUs.model')
+    MinSpecCPU = Column(Integer, ForeignKey('CPUs.id'), nullable = True)
+    MaxSpecCPU = Column(Integer, ForeignKey('CPUs.id'), nullable = True)
 
-    minSpecRam = Column(String, ForeignKey='RAM.amount')
-    maxSpecRam = Column(String, ForeignKey='RAM.amount')
+    minSpecRam = Column(Integer, ForeignKey('RAM.id'), nullable = True)
+    maxSpecRam = Column(Integer, ForeignKey('RAM.id'), nullable = True)
 
-    minSpecStorage = Column(String, ForeignKey='Storage.capacity')
-    maxSpecStorage = Column(String, ForeignKey='Storage.capacity')
+    minSpecStorage = Column(Integer, ForeignKey('Storage.id'), nullable = True)
+    maxSpecStorage = Column(Integer, ForeignKey('Storage.id'), nullable = True)
 
 
 
@@ -80,11 +81,11 @@ class CPU(Base):
 
     #relationships
     listOfMinSpec = relationship("Game", back_populates='MinSpecCPU')
-    listOfMaxSpec = relationship("Game", back_populates='MinSpecCPU')
+    listOfMaxSpec = relationship("Game", back_populates='MaxSpecCPU')
 
 
 class RAM(Base):
-    __tablename__ = 'ram'
+    __tablename__ = 'RAM'
 
     #native attributes
     id = Column(Integer, primary_key=True, index=True)

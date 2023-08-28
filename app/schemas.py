@@ -6,7 +6,6 @@ class GameBase(BaseModel):
 
 class Game(GameBase):
     id: int
-    FavouritedBy = list = []
     MinSpecGPU : str
     MaxSpecGPU : str
     MinSpecCPU : str
@@ -40,8 +39,8 @@ class GPUBase(BaseModel):
     cudaCores : int 
     tensorCores : int
     currentPriceAvg : int
-    listOfMinSpec : list = []
-    listofMaxSpec : list = []
+    listOfMinSpec : list[Game] = []
+    listofMaxSpec : list[Game] = []
 
     class Config:
         orm_mode = True
@@ -60,8 +59,8 @@ class CPUBase(BaseModel):
     baseClock : str
     boostClock : str
 
-    listOfMinSpec : list = []
-    listOfMaxSpec : list = []
+    listOfMinSpec : list[Game] = []
+    listOfMaxSpec : list[Game] = []
 
     class Config:
         orm_mode = True
@@ -79,8 +78,8 @@ class RAMBase(BaseModel):
     model : str
     amount : int
 
-    listOfMinSpec : list = []
-    listOfMaxSpec : list = []
+    listOfMinSpec : list[Game] = []
+    listOfMaxSpec : list[Game] = []
 
     class Config:
         orm_mode = True
@@ -97,12 +96,10 @@ class StorageBase:
     storageType : str
     capacity : int 
 
-    listOfMinSpec : list = []
-    listOfMaxSpec : list = []
+    listOfMinSpec : list[Game] = []
+    listOfMaxSpec : list[Game] = []
 
 #-------------- END OF RAM Schema 
-
-
 
 class UserBase(BaseModel):
     email: str
@@ -114,7 +111,7 @@ class User(UserBase):
     id: int
     is_active: bool 
     is_admin: bool
-    FavGames = list[GameBase] = []
+    FavGames: list[Game] = []
 
 
     class Config:
@@ -138,3 +135,4 @@ class TokenData(BaseModel):
         orm_mode = True
 
 # ---------- END OF token schema 
+

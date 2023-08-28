@@ -4,20 +4,20 @@ from jose import jwt, JWTError
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.exc import IntegrityError
 
-from . import crud 
-from . import models
-from . import schemas 
-from . import password 
-from . import authenticate
+import crud 
+import models
+import schemas 
+import password 
+import authenticate
+import database
 
 
-from .database import sessionLocal, engine
+
 from sqlalchemy.orm import Session
-from typing import List
 import uvicorn 
 
 
-models.Base.metadata.create_all(bind=engine)
+models.Base.metadata.create_all(bind=database.engine)
 oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl="/token",
     scheme_name="JWT"
@@ -26,7 +26,7 @@ oauth2_scheme = OAuth2PasswordBearer(
 app = FastAPI()
 
 def get_db():
-    db = sessionLocal()
+    db = database.sessionLocal()
     try:
         yield db
     finally:
@@ -52,14 +52,14 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
 
 
 @app.post('/register', response_model=schemas.User)
-def create_user(user: schemas.UserCreate, db: sessionLocal = Depends(get_db)):
+def create_user(user: schemas.UserCreate, db: database.sessionLocal = Depends(get_db)):
     hashed_password = password.get_password_hash(user.password)
-    db_user = crud.get_user_by_email(db, email=user.email)
+    db_user = crud.get_user_by_email(db, user_email=user.email)
     if db_user:
         raise HTTPException(status_code=400, detail='User with this email already exists')
     return crud.create_user(db=db, user=user, password_hashed=hashed_password)
 
-@app.get('/users/', response_model=List[schemas.User])
+@app.get('/users/', response_model=list[schemas.User])
 def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     users = crud.get_users(db, skip=skip, limit=limit)
     return users

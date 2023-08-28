@@ -4,7 +4,7 @@ from typing import Union
 from jose import jwt
 from sqlalchemy.orm import Session
 import crud
-from . import password
+import password
 
 
 
